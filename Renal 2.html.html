@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Renal Tubular Physiology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f1c22;
+    --panel:#152730;
+    --panel-2:#1b323d;
+    --line:#2c4753;
+    --parchment:#f4ead6;
+    --parchment-dim:#e9dcc0;
+    --coral:#e2734f;
+    --coral-dim:#c65f3f;
+    --amber:#d7a24a;
+    --sage:#8fae8f;
+    --sage-dim:#6f946f;
+    --rose:#c2594f;
+    --text-lo:#a9c0c4;
+    --text-hi:#f4ead6;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 15% -10%, rgba(226,115,79,0.10), transparent 45%),
+      radial-gradient(ellipse at 100% 0%, rgba(215,162,74,0.08), transparent 40%),
+      var(--ink);
+    color:var(--text-hi);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--coral);color:var(--ink);}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:56px 0 26px;position:relative;overflow:hidden;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--amber);display:inline-block;}
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(38px,6vw,68px);
+    line-height:0.98;
+    margin:0 0 6px;
+    color:var(--parchment);
+    letter-spacing:-0.01em;
+  }
+  h1.title em{
+    font-style:italic;font-weight:500;color:var(--coral);
+  }
+  .subtitle{
+    max-width:620px;color:var(--text-lo);font-size:15.5px;line-height:1.6;margin-top:14px;
+  }
+  .course-tag{
+    margin-top:22px;display:inline-flex;gap:18px;flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-lo);
+  }
+  .course-tag span b{color:var(--parchment);font-weight:600;}
+
+  /* ---------- NEPHRON NAV ---------- */
+  nav.tubule{
+    position:sticky;top:0;z-index:50;
+    background:rgba(15,28,34,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  .tubule-track{
+    position:relative;display:flex;gap:6px;align-items:center;
+    overflow-x:auto;padding-bottom:2px;
+  }
+  .tubule-track::-webkit-scrollbar{height:0;}
+  .flow-line{
+    position:absolute;left:0;right:0;top:50%;height:2px;
+    background:repeating-linear-gradient(90deg,var(--line) 0 6px, transparent 6px 12px);
+    transform:translateY(-50%);z-index:0;
+  }
+  .tab-btn{
+    position:relative;z-index:1;
+    flex:0 0 auto;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--text-lo);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:.03em;
+    padding:10px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    display:flex;align-items:center;gap:8px;
+    transition:all .22s ease;
+    white-space:nowrap;
+  }
+  .tab-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--line);transition:background .2s;}
+  .tab-btn:hover{border-color:var(--coral-dim);color:var(--parchment);}
+  .tab-btn.active{
+    background:var(--coral);border-color:var(--coral);color:var(--ink);font-weight:600;
+  }
+  .tab-btn.active .dot{background:var(--ink);}
+
+  main{padding:44px 0 90px;}
+  section.panel{display:none;animation:fadeUp .45s ease;}
+  section.panel.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .section-head{margin-bottom:30px;}
+  .section-head h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:32px;color:var(--parchment);margin:0 0 8px;
+  }
+  .section-head p{color:var(--text-lo);font-size:14.5px;max-width:560px;line-height:1.6;margin:0;}
+
+  /* ---------- OVERVIEW ---------- */
+  .rule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+  .rule-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    position:relative;overflow:hidden;
+  }
+  .rule-card::before{
+    content:attr(data-n);position:absolute;top:10px;right:16px;font-family:'IBM Plex Mono',monospace;
+    font-size:34px;color:var(--line);font-weight:600;
+  }
+  .rule-card h3{font-family:'Fraunces',serif;font-size:17px;color:var(--coral);margin:0 0 8px;font-weight:600;}
+  .rule-card p{font-size:13.6px;color:var(--text-lo);line-height:1.55;margin:0;position:relative;z-index:1;}
+  .rule-card b{color:var(--parchment);}
+
+  .stat-strip{
+    margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  }
+  .stat-cell{background:var(--panel);padding:22px 18px;text-align:center;}
+  .stat-cell .num{font-family:'Fraunces',serif;font-size:34px;color:var(--amber);font-weight:700;}
+  .stat-cell .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-lo);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+  @media(max-width:700px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---------- DIAGRAMS ---------- */
+  .diagram-block{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin-bottom:26px;
+  }
+  .diagram-block h3{font-family:'Fraunces',serif;color:var(--parchment);font-size:20px;margin:0 0 4px;}
+  .diagram-block .hint{color:var(--text-lo);font-size:13px;margin-bottom:18px;}
+
+  /* bar chart */
+  .bar-row{display:grid;grid-template-columns:120px 1fr 64px;align-items:center;gap:12px;padding:7px 0;cursor:pointer;}
+  .bar-row .name{font-size:13px;color:var(--parchment);}
+  .bar-track{background:var(--panel-2);border-radius:6px;height:20px;overflow:hidden;position:relative;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--coral-dim),var(--coral));border-radius:6px;width:0%;transition:width .8s cubic-bezier(.2,.8,.2,1);}
+  .bar-pct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);text-align:right;}
+  .bar-detail{
+    grid-column:1/-1;max-height:0;overflow:hidden;transition:max-height .3s ease;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-lo);
+  }
+  .bar-row.open .bar-detail{max-height:60px;padding-top:6px;}
+
+  /* segment explorer */
+  .segment-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .seg-btn{
+    background:var(--panel-2);border:1px solid var(--line);color:var(--text-lo);
+    font-size:12.5px;font-family:'IBM Plex Mono',monospace;padding:8px 14px;border-radius:8px;cursor:pointer;
+    transition:all .2s;
+  }
+  .seg-btn:hover{color:var(--parchment);}
+  .seg-btn.active{background:var(--sage);border-color:var(--sage);color:var(--ink);font-weight:600;}
+  .seg-view{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:20px;
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;
+  }
+  @media(max-width:640px){.seg-view{grid-template-columns:1fr;}}
+  .seg-view h4{margin:0 0 8px;color:var(--coral);font-family:'Fraunces',serif;font-size:16px;}
+  .seg-view ul{margin:0;padding-left:18px;color:var(--text-lo);font-size:13.3px;line-height:1.7;}
+  .seg-view ul li b{color:var(--parchment);}
+  .seg-pill{display:inline-block;background:var(--ink);border:1px solid var(--line);color:var(--amber);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:999px;margin-bottom:10px;}
+
+  /* transport mechanism widget */
+  .mech-toggle{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .mech-btn{
+    flex:1;min-width:150px;background:var(--panel-2);border:1px solid var(--line);color:var(--text-lo);
+    padding:10px;border-radius:10px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;transition:all .2s;
+  }
+  .mech-btn.active{background:var(--coral);border-color:var(--coral);color:var(--ink);font-weight:600;}
+  .cell-svg-wrap{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+  .cell-svg-wrap svg{flex:0 0 auto;}
+  .mech-caption{flex:1;min-width:220px;font-size:13.5px;color:var(--text-lo);line-height:1.65;}
+  .mech-caption b{color:var(--amber);}
+  .arrow-anim{transition:opacity .3s;}
+
+  /* principal vs intercalated */
+  .cell-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.cell-compare{grid-template-columns:1fr;}}
+  .cell-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;}
+  .cell-card h4{font-family:'Fraunces',serif;color:var(--parchment);margin:0 0 10px;}
+  .cell-card .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:12px;display:block;}
+  .ion-move{font-family:'IBM Plex Mono',monospace;font-size:13px;margin:6px 0;padding:8px;border-radius:8px;background:var(--ink);}
+  .ion-move.in{color:var(--sage);}
+  .ion-move.out{color:var(--coral);}
+
+  /* ---------- MIND MAP ---------- */
+  .map-wrap{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;
+    position:relative;
+  }
+  .map-info{
+    margin-top:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+    min-height:70px;
+  }
+  .map-info h4{margin:0 0 8px;color:var(--coral);font-family:'Fraunces',serif;font-size:17px;}
+  .map-info ul{margin:0;padding-left:18px;color:var(--text-lo);font-size:13.5px;line-height:1.7;}
+  .map-info ul li b{color:var(--parchment);}
+  .map-info .placeholder{color:var(--text-lo);font-size:13.5px;font-style:italic;}
+  svg .node-circle{fill:var(--panel-2);stroke:var(--line);stroke-width:2;transition:all .2s;cursor:pointer;}
+  svg .node-circle:hover, svg .node-circle.active{fill:var(--coral);stroke:var(--coral);}
+  svg .node-label{fill:var(--text-hi);font-family:'IBM Plex Mono',monospace;font-size:11.5px;pointer-events:none;text-anchor:middle;}
+  svg .node-circle.center{fill:var(--amber);stroke:var(--amber);}
+  svg .node-label.center{fill:var(--ink);font-weight:600;font-size:13px;}
+  svg .link{stroke:var(--line);stroke-width:1.5;}
+
+  /* ---------- FLASHCARDS ---------- */
+  .fc-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+  .fc-progress{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--text-lo);}
+  .fc-controls{display:flex;gap:8px;}
+  .btn{
+    background:var(--panel-2);border:1px solid var(--line);color:var(--parchment);
+    padding:9px 16px;border-radius:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    transition:all .2s;
+  }
+  .btn:hover{border-color:var(--coral);color:var(--coral);}
+  .btn.primary{background:var(--coral);border-color:var(--coral);color:var(--ink);font-weight:600;}
+  .btn.primary:hover{background:var(--coral-dim);color:var(--ink);}
+
+  .fc-stage{perspective:1400px;max-width:640px;margin:0 auto;}
+  .fc-card{
+    position:relative;width:100%;height:280px;cursor:pointer;
+  }
+  .fc-inner{
+    position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+  }
+  .fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:34px;border:1px solid var(--line);
+  }
+  .fc-front{background:var(--panel);}
+  .fc-front .fc-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:16px;letter-spacing:.08em;text-transform:uppercase;}
+  .fc-front .fc-q{font-family:'Fraunces',serif;font-size:21px;color:var(--parchment);line-height:1.4;}
+  .fc-back{background:var(--coral);color:var(--ink);transform:rotateY(180deg);}
+  .fc-back .fc-a{font-size:15px;line-height:1.6;font-weight:500;}
+  .fc-flip-hint{position:absolute;bottom:14px;right:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.6;}
+
+  .fc-nav{display:flex;justify-content:center;gap:14px;margin-top:22px;}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+  .score-badge{
+    font-family:'IBM Plex Mono',monospace;background:var(--panel-2);border:1px solid var(--line);
+    padding:9px 16px;border-radius:999px;font-size:12.5px;color:var(--amber);
+  }
+  .quiz-list{display:flex;flex-direction:column;gap:18px;}
+  .q-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .q-head{display:flex;gap:12px;margin-bottom:14px;}
+  .q-num{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:13px;flex:0 0 auto;padding-top:2px;}
+  .q-text{font-size:15px;color:var(--parchment);line-height:1.5;font-weight:500;}
+  .q-opts{display:grid;gap:8px;}
+  .opt-btn{
+    text-align:left;background:var(--panel-2);border:1px solid var(--line);color:var(--text-lo);
+    padding:11px 14px;border-radius:9px;cursor:pointer;font-size:13.6px;transition:all .18s;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .opt-btn:hover:not(.locked){border-color:var(--coral-dim);color:var(--parchment);}
+  .opt-letter{font-family:'IBM Plex Mono',monospace;color:var(--amber);flex:0 0 auto;}
+  .opt-btn.correct{background:rgba(143,174,143,0.18);border-color:var(--sage);color:var(--parchment);}
+  .opt-btn.wrong{background:rgba(194,89,79,0.18);border-color:var(--rose);color:var(--parchment);}
+  .opt-btn.locked{cursor:default;}
+  .q-feedback{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-lo);display:none;}
+  .quiz-footer{display:flex;justify-content:center;margin-top:30px;}
+  .result-banner{
+    display:none;text-align:center;background:var(--panel);border:1px solid var(--coral);border-radius:16px;
+    padding:34px;margin-bottom:26px;
+  }
+  .result-banner h3{font-family:'Fraunces',serif;font-size:26px;color:var(--parchment);margin:0 0 6px;}
+  .result-banner p{color:var(--text-lo);font-size:13.5px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);padding:26px 0;text-align:center;
+  }
+  footer p{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-lo);letter-spacing:.03em;margin:0;
+  }
+  footer span{color:var(--amber);}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001s !important;transition-duration:.001s !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Renal Physiology · Part 2</div>
+    <h1 class="title">Study <em>Smart</em></h1>
+    <p class="subtitle">A compact companion for tubular reabsorption and secretion — the route filtrate takes from Bowman's capsule to the collecting duct, and what leaves it along the way.</p>
+    <div class="course-tag">
+      <span>Topic <b>Tubular Reabsorption &amp; Secretion</b></span>
+      <span>Stage <b>2nd — Pharmacy</b></span>
+      <span>Instructor <b>Dr Ahmed Hazem</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="tubule">
+  <div class="wrap">
+    <div class="tubule-track">
+      <div class="flow-line"></div>
+      <button class="tab-btn active" data-tab="overview"><span class="dot"></span>Overview</button>
+      <button class="tab-btn" data-tab="diagrams"><span class="dot"></span>Diagrams</button>
+      <button class="tab-btn" data-tab="mindmap"><span class="dot"></span>Mind Map</button>
+      <button class="tab-btn" data-tab="flashcards"><span class="dot"></span>Flash Cards</button>
+      <button class="tab-btn" data-tab="quiz"><span class="dot"></span>Quiz Bank</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="panel active" id="overview">
+    <div class="section-head">
+      <h2>The rules, not the lecture</h2>
+      <p>Every governing principle from the chapter, distilled to one line each. No paragraphs — just what you need to recall under pressure.</p>
+    </div>
+
+    <div class="rule-grid">
+      <div class="rule-card" data-n="01"><h3>Filtration vs. Reabsorption</h3><p>Glomerular filtration is <b>nonselective</b> — everything but plasma proteins gets filtered. Tubular reabsorption is <b>highly selective</b>.</p></div>
+      <div class="rule-card" data-n="02"><h3>Two Routes</h3><p>Substances cross the epithelium <b>transcellularly</b> (through the cell) or <b>paracellularly</b> (through tight junctions).</p></div>
+      <div class="rule-card" data-n="03"><h3>Two Active Mechanisms</h3><p><b>Primary</b> active transport is powered directly by ATP hydrolysis (Na⁺-K⁺, H⁺, H⁺-K⁺, Ca²⁺ ATPases). <b>Secondary</b> active transport is powered by the sodium gradient itself.</p></div>
+      <div class="rule-card" data-n="04"><h3>The Master Pump</h3><p>The <b>Na⁺-K⁺ ATPase</b> on the basolateral membrane keeps intracellular Na⁺ low, creating the gradient that drives almost everything else.</p></div>
+      <div class="rule-card" data-n="05"><h3>Final Step = Bulk Flow</h3><p>From interstitial fluid into the peritubular capillary, movement is by <b>ultrafiltration</b>, governed by hydrostatic and colloid osmotic forces.</p></div>
+      <div class="rule-card" data-n="06"><h3>Proximal Tubule Design</h3><p>Loaded with <b>mitochondria</b> and an <b>extensive brush border</b> — built for high-capacity, high-metabolic reabsorption.</p></div>
+      <div class="rule-card" data-n="07"><h3>Early vs. Late PCT</h3><p>Early PCT: Na⁺ co-transported with <b>glucose &amp; amino acids</b>. Late PCT: glucose/AA are gone, so Na⁺ reabsorbs mainly with <b>chloride</b>.</p></div>
+      <div class="rule-card" data-n="08"><h3>The Ascending Limb Rule</h3><p>Thin <i>and</i> thick ascending limbs are <b>virtually impermeable to water</b> — the anatomical basis of urine concentration.</p></div>
+      <div class="rule-card" data-n="09"><h3>Two Cells, Late Nephron</h3><p><b>Principal cells</b>: reabsorb Na⁺/H₂O, secrete K⁺. <b>Intercalated cells</b>: reabsorb K⁺, secrete H⁺.</p></div>
+      <div class="rule-card" data-n="10"><h3>ADH Controls the Tap</h3><p>Late distal tubule &amp; collecting duct water permeability is set entirely by <b>ADH (vasopressin)</b> — none, no water reabsorption.</p></div>
+      <div class="rule-card" data-n="11"><h3>Medulla-Only Feature</h3><p>Only the <b>medullary</b> collecting duct is permeable to <b>urea</b>, via dedicated urea transporters.</p></div>
+      <div class="rule-card" data-n="12"><h3>ANP = Natriuresis</h3><p>Atrial stretch → <b>ANP</b> → inhibits Na⁺/H₂O reabsorption (mainly collecting ducts) and inhibits <b>renin</b>, so angiotensin II falls too.</p></div>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-cell"><div class="num">65%</div><div class="lbl">Na⁺ &amp; H₂O reabsorbed — Proximal Tubule</div></div>
+      <div class="stat-cell"><div class="num">20%</div><div class="lbl">Filtered water reabsorbed — Loop of Henle</div></div>
+      <div class="stat-cell"><div class="num">5%</div><div class="lbl">Filtered NaCl reabsorbed — Early Distal Tubule</div></div>
+      <div class="stat-cell"><div class="num">&lt;10%</div><div class="lbl">Filtered water &amp; Na⁺ — Collecting Duct</div></div>
+    </div>
+  </section>
+
+  <!-- ================= DIAGRAMS ================= -->
+  <section class="panel" id="diagrams">
+    <div class="section-head">
+      <h2>Every figure, made clickable</h2>
+      <p>The chapter's tables and cell diagrams, rebuilt so you can probe them instead of just staring.</p>
+    </div>
+
+    <!-- Widget 1: Filtered/Reabsorbed/Excreted bar chart -->
+    <div class="diagram-block">
+      <h3>Filtered vs. Reabsorbed — click a substance</h3>
+      <div class="hint">Bar length = % of filtered load reabsorbed. Click a row for the raw g/day or mEq/day figures.</div>
+      <div id="barChart"></div>
+    </div>
+
+    <!-- Widget 2: Segment explorer -->
+    <div class="diagram-block">
+      <h3>Walk the nephron</h3>
+      <div class="hint">Select a segment to see its permeability, transporters, and cell characteristics.</div>
+      <div class="segment-tabs" id="segTabs"></div>
+      <div class="seg-view" id="segView"></div>
+    </div>
+
+    <!-- Widget 3: sodium transport mechanism -->
+    <div class="diagram-block">
+      <h3>Sodium transport, three ways</h3>
+      <div class="hint">Toggle between the three transport modes described in the chapter.</div>
+      <div class="mech-toggle" id="mechToggle">
+        <button class="mech-btn active" data-mech="primary">Primary Active</button>
+        <button class="mech-btn" data-mech="cotransport">Secondary — Co-transport</button>
+        <button class="mech-btn" data-mech="countertransport">Secondary — Counter-transport</button>
+      </div>
+      <div class="cell-svg-wrap">
+        <svg width="230" height="200" viewBox="0 0 230 200">
+          <rect x="10" y="20" width="60" height="160" rx="6" fill="#0f1c22" stroke="#2c4753"/>
+          <text x="40" y="14" fill="#a9c0c4" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">BLOOD</text>
+          <rect x="80" y="20" width="70" height="160" rx="6" fill="#1b323d" stroke="#2c4753"/>
+          <text x="115" y="14" fill="#a9c0c4" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">CELL</text>
+          <rect x="160" y="20" width="60" height="160" rx="6" fill="#0f1c22" stroke="#2c4753"/>
+          <text x="190" y="14" fill="#a9c0c4" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">LUMEN</text>
+          <!-- basolateral ATP pump always visible -->
+          <circle cx="80" cy="65" r="12" fill="#d7a24a" stroke="#0f1c22"/>
+          <text x="80" y="68" font-size="8" text-anchor="middle" fill="#0f1c22" font-family="IBM Plex Mono">ATP</text>
+          <path id="arrowNaOut" class="arrow-anim" d="M78,65 L48,65" stroke="#e2734f" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+          <text x="60" y="58" font-size="8" fill="#e2734f" font-family="IBM Plex Mono">Na⁺</text>
+          <path id="arrowKIn" class="arrow-anim" d="M48,80 L78,80" stroke="#8fae8f" stroke-width="2.5" marker-end="url(#arrowhead2)"/>
+          <text x="58" y="93" font-size="8" fill="#8fae8f" font-family="IBM Plex Mono">K⁺</text>
+          <!-- luminal transporter -->
+          <circle id="luminalProt" cx="160" cy="110" r="12" fill="#e2734f" stroke="#0f1c22"/>
+          <text x="160" y="113" font-size="7" text-anchor="middle" fill="#0f1c22" font-family="IBM Plex Mono">T</text>
+          <path id="arrowNaIn" class="arrow-anim" d="M188,110 L172,110" stroke="#e2734f" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+          <path id="arrowSubIn" class="arrow-anim" d="M188,130 L172,130" stroke="#8fae8f" stroke-width="2.5" marker-end="url(#arrowhead2)"/>
+          <text id="labelSub" x="176" y="145" font-size="8" fill="#8fae8f" font-family="IBM Plex Mono">Glc</text>
+          <path id="arrowHOut" class="arrow-anim" d="M172,90 L188,90" stroke="#d7a24a" stroke-width="2.5" marker-end="url(#arrowhead3)" style="display:none"/>
+          <text id="labelH" x="176" y="85" font-size="8" fill="#d7a24a" font-family="IBM Plex Mono" style="display:none">H⁺</text>
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e2734f"/></marker>
+            <marker id="arrowhead2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8fae8f"/></marker>
+            <marker id="arrowhead3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d7a24a"/></marker>
+          </defs>
+        </svg>
+        <div class="mech-caption" id="mechCaption"></div>
+      </div>
+    </div>
+
+    <!-- Widget 4: principal vs intercalated -->
+    <div class="diagram-block">
+      <h3>Late distal tubule &amp; collecting duct — two cell types</h3>
+      <div class="hint">The two resident cell types and what each moves.</div>
+      <div class="cell-compare">
+        <div class="cell-card">
+          <span class="tag">PRINCIPAL CELL</span>
+          <h4>Sodium &amp; Water Handler</h4>
+          <div class="ion-move in">↓ Na⁺ reabsorbed</div>
+          <div class="ion-move in">↓ H₂O reabsorbed (needs ADH)</div>
+          <div class="ion-move out">↑ K⁺ secreted</div>
+        </div>
+        <div class="cell-card">
+          <span class="tag">INTERCALATED CELL</span>
+          <h4>Acid-Base Handler</h4>
+          <div class="ion-move in">↓ K⁺ reabsorbed</div>
+          <div class="ion-move out">↑ H⁺ secreted (via H⁺-ATPase)</div>
+          <div class="ion-move in">↓ HCO₃⁻ reabsorbed (basolateral)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MIND MAP ================= -->
+  <section class="panel" id="mindmap">
+    <div class="section-head">
+      <h2>One picture, whole chapter</h2>
+      <p>Click any node to unpack it. Start from the center and branch outward.</p>
+    </div>
+    <div class="map-wrap">
+      <svg id="mapSvg" width="100%" viewBox="0 0 900 520" style="max-width:100%;height:auto;"></svg>
+      <div class="map-info" id="mapInfo"><p class="placeholder">Click a node above to see what it covers.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= FLASHCARDS ================= -->
+  <section class="panel" id="flashcards">
+    <div class="section-head">
+      <h2>Flash Cards</h2>
+      <p>Tap the card to flip it. Work through the whole deck, then shuffle and try again.</p>
+    </div>
+    <div class="fc-bar">
+      <div class="fc-progress" id="fcProgress">Card 1 / 24</div>
+      <div class="fc-controls">
+        <button class="btn" id="fcShuffle">⤨ Shuffle</button>
+        <button class="btn" id="fcReset">↺ Reset</button>
+      </div>
+    </div>
+    <div class="fc-stage">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front">
+            <div class="fc-tag">Question</div>
+            <div class="fc-q" id="fcQ"></div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-a" id="fcA"></div>
+          </div>
+          <div class="fc-flip-hint">tap to flip</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn" id="fcPrev">← Prev</button>
+      <button class="btn primary" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next →</button>
+    </div>
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section class="panel" id="quiz">
+    <div class="section-head">
+      <h2>Quiz Bank</h2>
+      <p>32 questions. Options are reshuffled every time you load this page — no memorizing option letters.</p>
+    </div>
+    <div class="quiz-top">
+      <div class="score-badge" id="scoreBadge">Score: 0 / 0</div>
+      <button class="btn" id="quizReset">↺ Reshuffle &amp; Restart</button>
+    </div>
+    <div class="result-banner" id="resultBanner">
+      <h3 id="resultTitle"></h3>
+      <p id="resultText"></p>
+    </div>
+    <div class="quiz-list" id="quizList"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© <span>Anmar Taha</span> — All Rights Reserved · Study Smart / Renal Tubular Physiology</p>
+  </div>
+</footer>
+
+<script>
+/* ============ TAB NAVIGATION ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============ DIAGRAM 1: BAR CHART ============ */
+const substances = [
+  {name:'Glucose', unit:'g/day', filtered:180, reabsorbed:180, excreted:0, pct:100},
+  {name:'Bicarbonate', unit:'mEq/day', filtered:4320, reabsorbed:4318, excreted:2, pct:99.9},
+  {name:'Sodium', unit:'mEq/day', filtered:25560, reabsorbed:25410, excreted:150, pct:99.4},
+  {name:'Chloride', unit:'mEq/day', filtered:19440, reabsorbed:19260, excreted:180, pct:99.1},
+  {name:'Potassium', unit:'mEq/day', filtered:756, reabsorbed:664, excreted:92, pct:87.8},
+  {name:'Urea', unit:'g/day', filtered:46.8, reabsorbed:23.4, excreted:23.4, pct:50},
+  {name:'Creatinine', unit:'g/day', filtered:1.8, reabsorbed:0, excreted:1.8, pct:0},
+];
+const barChartEl = document.getElementById('barChart');
+substances.forEach((s,i)=>{
+  const row = document.createElement('div');
+  row.className='bar-row';
+  row.innerHTML = `
+    <div class="name">${s.name}</div>
+    <div class="bar-track"><div class="bar-fill" data-pct="${s.pct}"></div></div>
+    <div class="bar-pct">${s.pct}%</div>
+    <div class="bar-detail">Filtered: ${s.filtered} ${s.unit} · Reabsorbed: ${s.reabsorbed} ${s.unit} · Excreted: ${s.excreted} ${s.unit}</div>
+  `;
+  row.addEventListener('click',()=>row.classList.toggle('open'));
+  barChartEl.appendChild(row);
+});
+// animate on tab visit
+document.querySelector('[data-tab="diagrams"]').addEventListener('click',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(f=>{ f.style.width = f.dataset.pct+'%'; });
+  },80);
+});
+
+/* ============ DIAGRAM 2: SEGMENT EXPLORER ============ */
+const segments = [
+  {
+    key:'pct', label:'Proximal Tubule',
+    tag:'~65% of filtered Na⁺ & H₂O',
+    left:['<b>Cells:</b> highly metabolic, packed with mitochondria','<b>Membrane:</b> extensive brush border + basal channel labyrinth','<b>Route:</b> both transcellular & paracellular'],
+    right:['Early PCT: Na⁺ co-transported with <b>glucose & amino acids</b>','Late PCT: Na⁺ reabsorbed mainly with <b>chloride</b>','Secretes H⁺ via counter-transport (removes HCO₃⁻)']
+  },
+  {
+    key:'thin', label:'Thin Loop (Desc./Asc.)',
+    tag:'~20% of filtered water',
+    left:['<b>Cells:</b> thin, no brush border, few mitochondria, low metabolic activity','<b>Descending thin limb:</b> highly permeable to water, moderately to solutes'],
+    right:['<b>Ascending limb (thin + thick):</b> virtually impermeable to water','This impermeability is essential for concentrating urine']
+  },
+  {
+    key:'thick', label:'Thick Ascending Loop',
+    tag:'High metabolic activity',
+    left:['<b>Cells:</b> thick, high metabolic activity','<b>Key transporter:</b> 1-Na⁺ / 2-Cl⁻ / 1-K⁺ luminal co-transporter'],
+    right:['Actively reabsorbs Na⁺, Cl⁻, K⁺','Downhill Na⁺ diffusion drives uphill K⁺ reabsorption']
+  },
+  {
+    key:'distal', label:'Distal Tubule',
+    tag:'~5% of filtered NaCl (early segment)',
+    left:['<b>Early distal:</b> forms the macula densa — part of the juxtaglomerular complex, feeds back on GFR','<b>Transporter:</b> Na⁺-Cl⁻ co-transporter'],
+    right:['Avidly reabsorbs Na⁺, K⁺, Cl⁻','Virtually impermeable to water and urea']
+  },
+  {
+    key:'cortcd', label:'Late Distal & Cortical CD',
+    tag:'Principal + Intercalated cells',
+    left:['<b>Principal cells:</b> reabsorb Na⁺/H₂O, secrete K⁺','<b>Intercalated cells:</b> reabsorb K⁺, secrete H⁺'],
+    right:['Water permeability set by <b>ADH</b> — impermeable without it','Basis for controlling urine dilution vs. concentration']
+  },
+  {
+    key:'medcd', label:'Medullary Collecting Duct',
+    tag:'<10% of filtered water/Na⁺, but decisive',
+    left:['<b>Cells:</b> cuboidal, smooth surface, few mitochondria','Final processing site — determines final urine composition'],
+    right:['ADH-controlled water reabsorption into medullary interstitium','Only segment freely permeable to <b>urea</b> (dedicated transporters)','Secretes H⁺ against a large gradient — key acid-base role']
+  }
+];
+const segTabsEl = document.getElementById('segTabs');
+const segViewEl = document.getElementById('segView');
+function renderSeg(key){
+  const s = segments.find(x=>x.key===key);
+  segViewEl.innerHTML = `
+    <div>
+      <span class="seg-pill">${s.tag}</span>
+      <h4>Structure</h4>
+      <ul>${s.left.map(l=>`<li>${l}</li>`).join('')}</ul>
+    </div>
+    <div>
+      <h4>Function</h4>
+      <ul>${s.right.map(l=>`<li>${l}</li>`).join('')}</ul>
+    </div>
+  `;
+}
+segments.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.className = 'seg-btn'+(i===0?' active':'');
+  b.textContent = s.label;
+  b.addEventListener('click',()=>{
+    segTabsEl.querySelectorAll('.seg-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderSeg(s.key);
+  });
+  segTabsEl.appendChild(b);
+});
+renderSeg('pct');
+
+/* ============ DIAGRAM 3: SODIUM MECHANISM ============ */
+const mechData = {
+  primary:{
+    caption:'<b>Primary active transport.</b> The Na⁺-K⁺ ATPase on the basolateral membrane pumps Na⁺ out of the cell and K⁺ in, directly consuming ATP. This is the engine behind nearly all other sodium-linked transport in the nephron.',
+    show:{arrowNaOut:1, arrowKIn:1, arrowNaIn:0, arrowSubIn:0, arrowHOut:0, luminal:0}
+  },
+  cotransport:{
+    caption:'<b>Secondary active transport — co-transport.</b> Sodium diffusing down its gradient through a luminal carrier drags a second solute (glucose, amino acids) into the cell in the same direction. No direct ATP use at this step.',
+    show:{arrowNaOut:1, arrowKIn:1, arrowNaIn:1, arrowSubIn:1, arrowHOut:0, luminal:1}
+  },
+  countertransport:{
+    caption:'<b>Secondary active transport — counter-transport.</b> Sodium moves into the cell down its gradient while H⁺ is pushed the opposite direction, out into the tubular lumen — the mechanism behind proximal tubule hydrogen secretion.',
+    show:{arrowNaOut:1, arrowKIn:1, arrowNaIn:1, arrowSubIn:0, arrowHOut:1, luminal:1}
+  }
+};
+function renderMech(mode){
+  const d = mechData[mode];
+  document.getElementById('mechCaption').innerHTML = d.caption;
+  document.getElementById('arrowNaIn').style.display = d.show.arrowNaIn? 'block':'none';
+  document.getElementById('arrowSubIn').style.display = d.show.arrowSubIn? 'block':'none';
+  document.getElementById('labelSub').style.display = d.show.arrowSubIn? 'block':'none';
+  document.getElementById('arrowHOut').style.display = d.show.arrowHOut? 'block':'none';
+  document.getElementById('labelH').style.display = d.show.arrowHOut? 'block':'none';
+  document.getElementById('luminalProt').style.display = d.show.luminal? 'block':'none';
+}
+document.querySelectorAll('.mech-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.mech-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderMech(b.dataset.mech);
+  });
+});
+renderMech('primary');
+
+/* ============ MIND MAP ============ */
+const mapNodes = [
+  {id:'center', x:450, y:260, r:56, label:'Tubular\nReabsorption', center:true,
+    info:{title:'Tubular Reabsorption & Secretion', items:['As filtrate flows PCT → Loop → DCT → CD, substances move back into blood (reabsorption) or out into the lumen (secretion).','Reabsorption matters more than secretion for most substances — except K⁺, H⁺, and a few others.']}},
+  {id:'mech', x:220, y:110, r:44, label:'Mechanisms',
+    info:{title:'Mechanisms', items:['Routes: <b>transcellular</b> vs <b>paracellular</b>','<b>Primary active</b>: direct ATP use (Na⁺-K⁺, H⁺, H⁺-K⁺, Ca²⁺ ATPases)','<b>Secondary active</b>: co-transport or counter-transport, powered by the Na⁺ gradient','Final step into blood: ultrafiltration (bulk flow)']}},
+  {id:'segments', x:680, y:110, r:44, label:'Segments',
+    info:{title:'Nephron Segments', items:['<b>Proximal tubule</b> — 65% of Na⁺/H₂O','<b>Loop of Henle</b> — 20% of water, ascending limb impermeable to H₂O','<b>Distal tubule</b> — macula densa + 5% NaCl','<b>Collecting duct</b> — principal & intercalated cells, ADH-dependent']}},
+  {id:'reg', x:220, y:420, r:44, label:'Regulation',
+    info:{title:'Regulatory Signals', items:['<b>ADH (vasopressin)</b> — sets water permeability of late distal tubule & CD','<b>ANP</b> — atrial stretch → ↓Na⁺/H₂O reabsorption, ↓renin → ↓angiotensin II','<b>High-protein meal</b> → ↑amino acid & Na⁺ reabsorption in PCT → ↓macula densa Na⁺ → tubuloglomerular feedback → ↓afferent resistance → ↑GFR']}},
+  {id:'numbers', x:680, y:420, r:44, label:'Key Numbers',
+    info:{title:'Numbers Worth Memorizing', items:['Glucose & amino acids: <b>~100%</b> reabsorbed','Bicarbonate: <b>>99.9%</b>','Sodium: <b>99.4%</b> · Chloride: <b>99.1%</b>','Potassium: <b>87.8%</b> · Urea: <b>50%</b> · Creatinine: <b>0%</b>']}},
+];
+const mapLinks = [['center','mech'],['center','segments'],['center','reg'],['center','numbers']];
+const svgNS = "http://www.w3.org/2000/svg";
+const mapSvg = document.getElementById('mapSvg');
+mapLinks.forEach(([a,b])=>{
+  const na = mapNodes.find(n=>n.id===a), nb = mapNodes.find(n=>n.id===b);
+  const line = document.createElementNS(svgNS,'line');
+  line.setAttribute('x1',na.x); line.setAttribute('y1',na.y);
+  line.setAttribute('x2',nb.x); line.setAttribute('y2',nb.y);
+  line.setAttribute('class','link');
+  mapSvg.appendChild(line);
+});
+mapNodes.forEach(n=>{
+  const g = document.createElementNS(svgNS,'g');
+  const circle = document.createElementNS(svgNS,'circle');
+  circle.setAttribute('cx',n.x); circle.setAttribute('cy',n.y); circle.setAttribute('r',n.r);
+  circle.setAttribute('class','node-circle'+(n.center?' center':''));
+  circle.dataset.id = n.id;
+  g.appendChild(circle);
+  n.label.split('\n').forEach((line,i)=>{
+    const text = document.createElementNS(svgNS,'text');
+    text.setAttribute('x',n.x); text.setAttribute('y', n.y + (i - (n.label.split('\n').length-1)/2)*13 + 4);
+    text.setAttribute('class','node-label'+(n.center?' center':''));
+    text.textContent = line;
+    g.appendChild(text);
+  });
+  g.style.cursor='pointer';
+  g.addEventListener('click',()=>{
+    document.querySelectorAll('.node-circle').forEach(c=>c.classList.remove('active'));
+    circle.classList.add('active');
+    const info = document.getElementById('mapInfo');
+    info.innerHTML = `<h4>${n.info.title}</h4><ul>${n.info.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+  });
+  mapSvg.appendChild(g);
+});
+
+/* ============ FLASHCARDS ============ */
+let fcDeck = [
+  {q:"What's the difference between transcellular and paracellular reabsorption?", a:"Transcellular = through the tubular cell membranes themselves. Paracellular = through the intercellular (tight junction) spaces."},
+  {q:"What powers primary active transport, and give the four renal ATPases.", a:"ATP hydrolysis via membrane-bound ATPase. Sodium-potassium ATPase, hydrogen ATPase, hydrogen-potassium ATPase, and calcium ATPase."},
+  {q:"How does secondary active transport get its energy?", a:"Not directly from ATP — it uses the energy released when another substance (usually Na⁺) diffuses down its own electrochemical gradient (facilitated diffusion)."},
+  {q:"What creates the low intracellular Na⁺ that drives Na⁺ entry from the lumen?", a:"The basolateral Na⁺-K⁺ ATPase pump, which also creates a negative intracellular electrical potential."},
+  {q:"What percentage of filtered sodium and water does the proximal tubule reabsorb?", a:"About 65 percent."},
+  {q:"Why do proximal tubule cells have so many mitochondria and an extensive brush border?", a:"High metabolic activity supports powerful active transport; the brush border and basal channel labyrinth maximize membrane surface area for rapid transport."},
+  {q:"In the early proximal tubule, what is Na⁺ co-transported with?", a:"Glucose, amino acids, and other organic solutes."},
+  {q:"In the late proximal tubule, what does Na⁺ reabsorb mainly with, and why?", a:"Mainly with chloride — because glucose and amino acids are largely gone by then, leaving a higher luminal chloride concentration that favors Cl⁻ diffusion."},
+  {q:"Why does chloride concentration rise along the proximal tubule (105 → 140 mEq/L)?", a:"Sodium reabsorption in the early PCT preferentially carries glucose, bicarbonate, and organic ions with it, leaving chloride behind and concentrated."},
+  {q:"Why does sodium concentration stay roughly constant along the proximal tubule even though the amount reabsorbed is large?", a:"Because the proximal tubule is so water-permeable that water reabsorption keeps pace with solute reabsorption (isosmotic reabsorption)."},
+  {q:"Name the three segments of the loop of Henle.", a:"Thin descending segment, thin ascending segment, and thick ascending segment."},
+  {q:"What is the water permeability of the descending thin limb vs. the ascending limb?", a:"Descending thin limb: highly permeable to water. Ascending limb (thin and thick): virtually impermeable to water."},
+  {q:"What percentage of filtered water is reabsorbed in the loop of Henle, and where mostly?", a:"About 20 percent, almost entirely in the thin descending limb."},
+  {q:"What is the main luminal transporter of the thick ascending limb?", a:"The 1-sodium, 2-chloride, 1-potassium co-transporter."},
+  {q:"What structure does the first portion of the distal tubule form, and what does it do?", a:"The macula densa — part of the juxtaglomerular complex, providing feedback control of GFR and blood flow in the same nephron."},
+  {q:"What percentage of filtered NaCl is reabsorbed in the early distal tubule, and by what transporter?", a:"About 5 percent, via the sodium-chloride co-transporter."},
+  {q:"Name the two cell types of the late distal tubule / cortical collecting tubule.", a:"Principal cells and intercalated cells."},
+  {q:"What do principal cells do?", a:"Reabsorb sodium and water from the lumen and secrete potassium ions into the lumen."},
+  {q:"What do intercalated cells do?", a:"Reabsorb potassium ions and secrete hydrogen ions into the tubular lumen."},
+  {q:"What controls water permeability of the late distal tubule and cortical collecting duct?", a:"The concentration of ADH (vasopressin) — permeable with high ADH, virtually impermeable without it."},
+  {q:"What's unique about the medullary collecting duct compared to the cortical collecting tubule?", a:"It's permeable to urea via dedicated urea transporters, and it can secrete H⁺ against a large concentration gradient."},
+  {q:"How does hydrogen ion secretion happen in intercalated cells?", a:"Carbonic anhydrase converts CO₂ + H₂O into carbonic acid, which dissociates into H⁺ and HCO₃⁻; H⁺ is secreted via a hydrogen-ATPase, and HCO₃⁻ is reabsorbed across the basolateral membrane."},
+  {q:"What triggers atrial natriuretic peptide (ANP) release, and what does it do?", a:"Distension of cardiac atria from plasma volume expansion. ANP inhibits Na⁺/H₂O reabsorption (especially in collecting ducts) and inhibits renin secretion, reducing angiotensin II."},
+  {q:"Explain how a high-protein meal raises GFR.", a:"More amino acids are reabsorbed with Na⁺ in the proximal tubule, lowering Na⁺ delivery to the macula densa. This triggers tubuloglomerular feedback that dilates afferent arterioles, raising renal blood flow and GFR."}
+];
+let fcOrder = fcDeck.map((_,i)=>i);
+let fcIndex = 0;
+const fcCardEl = document.getElementById('fcCard');
+function renderFC(){
+  const item = fcDeck[fcOrder[fcIndex]];
+  document.getElementById('fcQ').textContent = item.q;
+  document.getElementById('fcA').textContent = item.a;
+  fcCardEl.classList.remove('flipped');
+  document.getElementById('fcProgress').textContent = `Card ${fcIndex+1} / ${fcDeck.length}`;
+}
+fcCardEl.addEventListener('click',()=> fcCardEl.classList.toggle('flipped'));
+document.getElementById('fcFlip').addEventListener('click',()=> fcCardEl.classList.toggle('flipped'));
+document.getElementById('fcNext').addEventListener('click',()=>{ fcIndex=(fcIndex+1)%fcDeck.length; renderFC(); });
+document.getElementById('fcPrev').addEventListener('click',()=>{ fcIndex=(fcIndex-1+fcDeck.length)%fcDeck.length; renderFC(); });
+document.getElementById('fcShuffle').addEventListener('click',()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIndex=0; renderFC();
+});
+document.getElementById('fcReset').addEventListener('click',()=>{
+  fcOrder = fcDeck.map((_,i)=>i); fcIndex=0; renderFC();
+});
+renderFC();
+
+/* ============ QUIZ BANK ============ */
+const quizData = [
+  {q:"Which process is relatively nonselective, filtering essentially all plasma solutes except proteins?", opts:["Tubular reabsorption","Glomerular filtration","Tubular secretion","Peritubular ultrafiltration"], correct:1},
+  {q:"Which two substances account for a significant amount of tubular secretion into the urine?", opts:["Glucose and amino acids","Potassium and hydrogen ions","Sodium and chloride","Urea and creatinine"], correct:1},
+  {q:"For a substance to be reabsorbed, it must cross the tubular epithelium and then which structure to reach the blood?", opts:["The glomerular basement membrane","The Bowman's capsule wall","The peritubular capillary membrane","The vasa recta only"], correct:2},
+  {q:"Movement of water and solutes through the cell membrane itself is called the:", opts:["Paracellular route","Transcellular route","Countercurrent route","Osmotic route"], correct:1},
+  {q:"Movement through the spaces between cell junctions is called the:", opts:["Transcellular route","Facilitated route","Paracellular route","Active route"], correct:2},
+  {q:"Final movement of water and solutes from interstitial fluid into the peritubular capillary occurs mainly by:", opts:["Primary active transport","Ultrafiltration (bulk flow)","Simple diffusion only","Secondary active transport"], correct:1},
+  {q:"Primary active transport in the kidney is linked to the hydrolysis of:", opts:["GTP","ADP only","ATP","Creatine phosphate"], correct:2},
+  {q:"Which of the following is NOT one of the primary active transporters listed for the kidney?", opts:["Sodium-potassium ATPase","Hydrogen ATPase","Glucose ATPase","Calcium ATPase"], correct:2},
+  {q:"The sodium-potassium pump on the basolateral membrane creates a low intracellular sodium concentration and a:", opts:["Positive intracellular potential","Negative intracellular potential","Neutral membrane potential","High intracellular chloride"], correct:1},
+  {q:"In secondary active transport, the energy comes directly from:", opts:["ATP hydrolysis at the same carrier","Facilitated diffusion of another substance down its gradient","Hydrostatic pressure in the capillary","Colloid osmotic pressure"], correct:1},
+  {q:"In the co-transport example given, glucose and amino acids move together with which ion?", opts:["Potassium","Chloride","Sodium","Calcium"], correct:2},
+  {q:"Counter-transport of hydrogen ions into the tubular lumen is powered by:", opts:["Sodium moving into the cell down its gradient","Sodium moving out of the cell","Potassium moving into the lumen","ATP hydrolysis at the luminal membrane"], correct:0},
+  {q:"Approximately what percentage of filtered sodium and water is reabsorbed by the proximal tubule?", opts:["35%", "50%", "65%", "90%"], correct:2},
+  {q:"The high reabsorptive capacity of the proximal tubule is due in part to its cells having large numbers of:", opts:["Lysosomes", "Mitochondria", "Ribosomes", "Peroxisomes"], correct:1},
+  {q:"In the first half of the proximal tubule, sodium is reabsorbed by co-transport mainly with:", opts:["Chloride and urea","Glucose, amino acids, and other solutes","Potassium and calcium","Bicarbonate alone"], correct:1},
+  {q:"In the second half of the proximal tubule, sodium is reabsorbed mainly with:", opts:["Glucose","Amino acids","Chloride","Phosphate"], correct:2},
+  {q:"Compared with the early proximal tubule, chloride concentration in the late proximal tubule is:", opts:["Lower","Unchanged","Higher","Zero"], correct:2},
+  {q:"Along the proximal tubule, sodium concentration in the tubular fluid stays relatively constant because:", opts:["Sodium is not reabsorbed there","Water reabsorption keeps pace with sodium reabsorption","Chloride replaces all sodium","Urea reabsorption offsets sodium loss"], correct:1},
+  {q:"Which solutes decrease markedly in concentration along the proximal tubule because they are reabsorbed more avidly than water?", opts:["Creatinine and urea","Glucose, amino acids, and bicarbonate","Potassium and magnesium","Chloride and sodium"], correct:1},
+  {q:"Which segment(s) of the loop of Henle have thin epithelial membranes with few mitochondria and no brush border?", opts:["Thick ascending limb only","Thin descending and thin ascending segments","Cortical collecting tubule","Early distal tubule"], correct:1},
+  {q:"The descending thin limb of the loop of Henle is:", opts:["Impermeable to water","Highly permeable to water and moderately permeable to solutes","Impermeable to all solutes","Permeable only to potassium"], correct:1},
+  {q:"About what percentage of filtered water is reabsorbed in the loop of Henle, mostly in the descending limb?", opts:["5%", "20%", "40%", "65%"], correct:1},
+  {q:"Why is the ascending limb's impermeability to water important?", opts:["It concentrates plasma proteins","It is important for concentrating the urine","It prevents glucose loss","It regulates blood pressure directly"], correct:1},
+  {q:"The luminal sodium transporter of the thick ascending limb is the:", opts:["Sodium-glucose co-transporter","1-Na⁺/2-Cl⁻/1-K⁺ co-transporter","Sodium-hydrogen exchanger","Sodium-chloride co-transporter"], correct:1},
+  {q:"The macula densa is formed by the first portion of which structure?", opts:["The proximal tubule","The thick ascending limb","The distal tubule","The collecting duct"], correct:2},
+  {q:"The macula densa is part of the:", opts:["Vasa recta","Juxtaglomerular complex","Bowman's capsule","Peritubular network"], correct:1},
+  {q:"The early distal tubule reabsorbs sodium chloride via the:", opts:["1-Na⁺/2-Cl⁻/1-K⁺ co-transporter","Sodium-chloride co-transporter","Sodium-hydrogen exchanger","Sodium-glucose co-transporter"], correct:1},
+  {q:"About what percentage of filtered sodium chloride is reabsorbed in the early distal tubule?", opts:["5%", "20%", "50%", "65%"], correct:0},
+  {q:"Which cell type of the late distal tubule / collecting tubule secretes potassium into the lumen?", opts:["Intercalated cells","Principal cells","Macula densa cells","Mesangial cells"], correct:1},
+  {q:"Which cell type reabsorbs potassium and secretes hydrogen ions?", opts:["Principal cells","Podocytes","Intercalated cells","Juxtaglomerular cells"], correct:2},
+  {q:"Water permeability of the late distal tubule and cortical collecting duct is controlled by:", opts:["Aldosterone only","ADH (vasopressin)","Atrial natriuretic peptide","Angiotensin II only"], correct:1},
+  {q:"Unlike the cortical collecting tubule, the medullary collecting duct is distinctly permeable to:", opts:["Glucose","Urea","Amino acids","Creatinine"], correct:1},
+  {q:"Atrial natriuretic peptide (ANP) is released when cardiac atria are distended due to:", opts:["Decreased blood volume","Plasma volume expansion","Low sodium intake","High ADH levels"], correct:1},
+  {q:"ANP's effect on renal sodium and water handling is to:", opts:["Increase reabsorption of sodium and water","Inhibit reabsorption of sodium and water","Have no direct tubular effect","Increase renin secretion"], correct:1},
+  {q:"ANP also inhibits secretion of:", opts:["ADH","Renin","Insulin","Erythropoietin"], correct:1},
+  {q:"A high-protein meal raises GFR mainly through increased reabsorption of which substance in the proximal tubule, triggering tubuloglomerular feedback?", opts:["Glucose","Amino acids","Urea","Phosphate"], correct:1},
+  {q:"Increased proximal amino acid/sodium reabsorption after a protein meal leads to which change at the macula densa?", opts:["Increased sodium delivery","Decreased sodium delivery","No change in sodium delivery","Increased potassium delivery"], correct:1},
+  {q:"Decreased sodium delivery to the macula densa causes afferent arteriolar resistance to:", opts:["Increase","Decrease","Stay the same","Become zero permanently"], correct:1}
+];
+let quizState = [];
+function shuffleArray(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function buildQuiz(){
+  quizState = quizData.map(item=>{
+    const optsWithIndex = item.opts.map((text,idx)=>({text, isCorrect: idx===item.correct}));
+    const shuffled = shuffleArray(optsWithIndex);
+    return {q:item.q, options:shuffled, answered:false, correctPicked:false};
+  });
+  renderQuiz();
+}
+const letters = ['A','B','C','D'];
+function renderQuiz(){
+  const list = document.getElementById('quizList');
+  list.innerHTML='';
+  document.getElementById('resultBanner').style.display='none';
+  quizState.forEach((item,qi)=>{
+    const card = document.createElement('div');
+    card.className='q-card';
+    const optsHtml = item.options.map((o,oi)=>`
+      <button class="opt-btn" data-qi="${qi}" data-oi="${oi}">
+        <span class="opt-letter">${letters[oi]}</span><span>${o.text}</span>
+      </button>
+    `).join('');
+    card.innerHTML = `
+      <div class="q-head"><div class="q-num mono">Q${qi+1}</div><div class="q-text">${item.q}</div></div>
+      <div class="q-opts">${optsHtml}</div>
+      <div class="q-feedback" id="fb-${qi}"></div>
+    `;
+    list.appendChild(card);
+  });
+  document.querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click', onOptionClick);
+  });
+  updateScore();
+}
+function onOptionClick(e){
+  const btn = e.currentTarget;
+  const qi = +btn.dataset.qi, oi = +btn.dataset.oi;
+  const item = quizState[qi];
+  if(item.answered) return;
+  item.answered = true;
+  const card = btn.closest('.q-card');
+  const allBtns = card.querySelectorAll('.opt-btn');
+  allBtns.forEach(b=>b.classList.add('locked'));
+  item.options.forEach((o,idx)=>{
+    if(o.isCorrect) allBtns[idx].classList.add('correct');
+  });
+  if(!item.options[oi].isCorrect){
+    allBtns[oi].classList.add('wrong');
+  } else {
+    item.correctPicked = true;
+  }
+  const fb = document.getElementById('fb-'+qi);
+  fb.style.display='block';
+  fb.textContent = item.correctPicked ? '✓ Correct.' : '✗ Not quite — correct answer highlighted above.';
+  updateScore();
+  checkAllAnswered();
+}
+function updateScore(){
+  const answered = quizState.filter(i=>i.answered).length;
+  const correct = quizState.filter(i=>i.correctPicked).length;
+  document.getElementById('scoreBadge').textContent = `Score: ${correct} / ${answered} answered (of ${quizState.length})`;
+}
+function checkAllAnswered(){
+  if(quizState.every(i=>i.answered)){
+    const correct = quizState.filter(i=>i.correctPicked).length;
+    const pct = Math.round(correct/quizState.length*100);
+    document.getElementById('resultBanner').style.display='block';
+    document.getElementById('resultTitle').textContent = `${correct} / ${quizState.length} — ${pct}%`;
+    document.getElementById('resultText').textContent = pct>=80 ? "Strong grasp of the chapter. Revisit any missed ones below." : pct>=50 ? "Decent start — review the segments you missed and try again." : "Worth another pass through Overview and Diagrams before retrying.";
+    document.getElementById('resultBanner').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+document.getElementById('quizReset').addEventListener('click', buildQuiz);
+buildQuiz();
+</script>
+</body>
+</html>
